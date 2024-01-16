@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -21,7 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
-import DatePicker from "./date-picker";
+import { DatePicker } from "./date-picker";
 import { useCreateDemand } from "@/query/use-create-demand";
 import { useDisclosure } from "@/hooks/use-disclosure";
 import { Loader2 } from "lucide-react";
@@ -63,7 +64,7 @@ export function AddDemandDialog() {
       <DialogTrigger asChild>
         <Button>+ Adicionar</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[425px] w-[95vw] rounded-lg">
         <DialogHeader>
           <DialogTitle>Adicionar Demanda</DialogTitle>
           <DialogDescription>
@@ -111,7 +112,10 @@ export function AddDemandDialog() {
               )}
             />
 
-            <DialogFooter>
+            <DialogFooter className="gap-2">
+              <DialogClose asChild>
+                <Button variant={"outline"}>Cancelar</Button>
+              </DialogClose>
               <Button
                 type="submit"
                 disabled={createDemand.isPending}

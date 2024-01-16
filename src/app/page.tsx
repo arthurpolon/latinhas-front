@@ -1,7 +1,7 @@
 "use client";
 
 import { AddDemandDialog } from "@/components/add-demand-dialog";
-import { DataTable } from "@/components/demands-table";
+import { DemandsTable } from "@/components/demands-table";
 import { Button } from "@/components/ui/button";
 import { useGetDemands } from "@/query/use-get-demands";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -30,7 +30,7 @@ export default function Home() {
         <AddDemandDialog />
       </div>
 
-      <DataTable data={demands} />
+      <DemandsTable data={demands} />
 
       <div className="flex items-center justify-end">
         {range()}

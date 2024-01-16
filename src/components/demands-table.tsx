@@ -16,6 +16,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TDemand } from "@/types/Demand";
+import { SquarePen } from "lucide-react";
+import { RemoveDemandDialog } from "./remove-demand-dialog";
 
 const columns: ColumnDef<TDemand>[] = [
   {
@@ -31,13 +33,25 @@ const columns: ColumnDef<TDemand>[] = [
     accessorKey: "totalPlan",
     header: "Total Plan (tons)",
   },
+  {
+    id: "actions",
+    cell: ({ row }) => (
+      <div className="flex gap-2">
+        <button className="bg-blue-900 rounded py-1 px-1">
+          <SquarePen className="text-white" />
+        </button>
+
+        <RemoveDemandDialog demandId={row.original.id} />
+      </div>
+    ),
+  },
 ];
 
 interface IProps {
   data: TDemand[];
 }
 
-export function DataTable({ data }: IProps) {
+export function DemandsTable({ data }: IProps) {
   const table = useReactTable({
     data,
     columns,

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const Header = () => {
+export function Header() {
   return (
     <header className="w-screen bg-[#232120]">
       <div className="container">
@@ -15,6 +15,4 @@ const Header = () => {
       </div>
     </header>
   );
-};
-
-export default Header;
+}
