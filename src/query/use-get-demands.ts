@@ -1,3 +1,5 @@
+"use client";
+
 import { usePagination } from "@/hooks/use-pagination";
 import { api } from "@/services/api";
 import { TDemand } from "@/types/Demand";

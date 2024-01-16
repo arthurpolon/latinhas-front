@@ -22,16 +22,21 @@ import {
   FormMessage,
 } from "./ui/form";
 import DatePicker from "./date-picker";
+import { useCreateDemand } from "@/query/use-create-demand";
+import { useDisclosure } from "@/hooks/use-disclosure";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   description: z.string(),
-  totalPlan: z.string(),
+  totalPlan: z.string().min(1, "Campo obrigatório"),
   date: z.date(),
 });
 
 type TForm = z.infer<typeof formSchema>;
 
 export function AddDemandDialog() {
+  const [open, handler] = useDisclosure();
+
   const form = useForm<TForm>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,12 +46,20 @@ export function AddDemandDialog() {
     },
   });
 
-  const onSubmit = (values: TForm) => {
-    console.log(values);
+  const createDemand = useCreateDemand();
+
+  const onSubmit = async (values: TForm) => {
+    await createDemand.mutateAsync(values);
+
+    handler.close();
+    form.reset();
   };
 
   return (
-    <Dialog>
+    <Dialog
+      open={open}
+      onOpenChange={(value) => (value ? handler.open() : handler.close())}
+    >
       <DialogTrigger asChild>
         <Button>+ Adicionar</Button>
       </DialogTrigger>
@@ -99,7 +112,17 @@ export function AddDemandDialog() {
             />
 
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button
+                type="submit"
+                disabled={createDemand.isPending}
+                className="disabled:opacity-60"
+              >
+                {createDemand.isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Save changes"
+                )}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
