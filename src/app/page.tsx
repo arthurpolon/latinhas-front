@@ -32,13 +32,14 @@ export default function Home() {
 
       <DemandsTable data={demands} />
 
-      <div className="flex items-center justify-end">
+      <div className="flex items-center justify-end gap-2">
         {range()}
 
         <Button
           onClick={pagination.previous}
           variant={"ghost"}
           className="h-auto p-2"
+          disabled={meta?.hasPreviousPage === false}
         >
           <ChevronLeft />
         </Button>
@@ -47,6 +48,7 @@ export default function Home() {
           onClick={pagination.next}
           variant={"ghost"}
           className="h-auto p-2"
+          disabled={meta?.hasNextPage === false}
         >
           <ChevronRight />
         </Button>

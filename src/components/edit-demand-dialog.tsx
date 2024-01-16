@@ -23,34 +23,55 @@ import {
   FormMessage,
 } from "./ui/form";
 import { DatePicker } from "./date-picker";
-import { useCreateDemand } from "@/query/use-create-demand";
 import { useDisclosure } from "@/hooks/use-disclosure";
-import { Loader2 } from "lucide-react";
+import { Loader2, SquarePen } from "lucide-react";
+import { TDemand } from "@/types/Demand";
+import { useUpdateDemand } from "@/query/use-update-demand";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
 const formSchema = z.object({
   description: z.string(),
   totalPlan: z.string().min(1, "Campo obrigatório"),
   date: z.date(),
+  status: z.enum(["planning", "in_progress", "completed"]),
 });
 
 type TForm = z.infer<typeof formSchema>;
 
-export function AddDemandDialog() {
-  const [open, handler] = useDisclosure();
+interface IProps {
+  demand: TDemand;
+}
 
+export function EditDemandDialog(props: IProps) {
   const form = useForm<TForm>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      description: "",
-      totalPlan: "",
-      date: new Date(),
+    values: {
+      date: new Date(props.demand.date),
+      totalPlan: props.demand.totalPlan.toString(),
+      status: props.demand.status,
+      description: props.demand.description || "",
     },
   });
 
-  const createDemand = useCreateDemand();
+  const [open, handler] = useDisclosure(false, {
+    onClose() {
+      form.reset();
+    },
+  });
+
+  const updateDemand = useUpdateDemand();
 
   const onSubmit = async (values: TForm) => {
-    await createDemand.mutateAsync(values);
+    await updateDemand.mutateAsync({
+      id: props.demand.id,
+      payload: values,
+    });
 
     handler.close();
     form.reset();
@@ -62,13 +83,15 @@ export function AddDemandDialog() {
       onOpenChange={(value) => (value ? handler.open() : handler.close())}
     >
       <DialogTrigger asChild>
-        <Button>+ Adicionar</Button>
+        <button className="bg-blue-900 rounded py-1 px-1">
+          <SquarePen className="text-white" />
+        </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px] w-[95vw] rounded-lg">
         <DialogHeader>
-          <DialogTitle>Adicionar Demanda</DialogTitle>
+          <DialogTitle>Editar Demanda</DialogTitle>
           <DialogDescription>
-            Preencha os campos abaixo para adicionar uma demanda
+            Edite os campos abaixo para modificar uma demanda
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -78,7 +101,7 @@ export function AddDemandDialog() {
               name="totalPlan"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Total (em toneladas)</FormLabel>
+                  <FormLabel>Total (tons)</FormLabel>
                   <FormControl>
                     <Input type="number" {...field} />
                   </FormControl>
@@ -97,15 +120,48 @@ export function AddDemandDialog() {
                 </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="planning">
+                        <div className="bg-red-300 w-fit py-1 px-2 rounded-lg">
+                          Planejamento
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="in_progress">
+                        <div className="bg-blue-300 w-fit py-1 px-2 rounded-lg">
+                          Em Andamento
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="completed">
+                        <div className="bg-green-300 w-fit py-1 px-2 rounded-lg">
+                          Concluído
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    Descrição <span className="text-xs italic">(opcional)</span>
-                  </FormLabel>
+                  <FormLabel>Descrição</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -120,13 +176,13 @@ export function AddDemandDialog() {
               </DialogClose>
               <Button
                 type="submit"
-                disabled={createDemand.isPending}
+                disabled={updateDemand.isPending}
                 className="disabled:opacity-60"
               >
-                {createDemand.isPending ? (
+                {updateDemand.isPending ? (
                   <Loader2 className="animate-spin" />
                 ) : (
-                  "Salvar"
+                  "Editar"
                 )}
               </Button>
             </DialogFooter>

@@ -16,8 +16,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { TDemand } from "@/types/Demand";
-import { SquarePen } from "lucide-react";
 import { RemoveDemandDialog } from "./remove-demand-dialog";
+import { EditDemandDialog } from "./edit-demand-dialog";
 
 const columns: ColumnDef<TDemand>[] = [
   {
@@ -34,12 +34,36 @@ const columns: ColumnDef<TDemand>[] = [
     header: "Total Plan (tons)",
   },
   {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      switch (row.original.status) {
+        case "planning":
+          return (
+            <div className="bg-red-300 w-fit py-1 px-2 rounded-lg">
+              Planejamento
+            </div>
+          );
+        case "in_progress":
+          return (
+            <div className="bg-blue-300 w-fit py-1 px-2 rounded-lg">
+              Em Andamento
+            </div>
+          );
+        case "completed":
+          return (
+            <div className="bg-green-300 w-fit py-1 px-2 rounded-lg">
+              Concluído
+            </div>
+          );
+      }
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => (
       <div className="flex gap-2">
-        <button className="bg-blue-900 rounded py-1 px-1">
-          <SquarePen className="text-white" />
-        </button>
+        <EditDemandDialog demand={row.original} />
 
         <RemoveDemandDialog demandId={row.original.id} />
       </div>
