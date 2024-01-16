@@ -22,8 +22,14 @@ export default function Home() {
   };
 
   return (
-    <main className="container">
-      <AddDemandDialog />
+    <main className="container py-6">
+      <h1 className="mb-6 text-xl font-bold">
+        DEMANDAS DE PRODUÇÃO DE LATINHAS
+      </h1>
+      <div className="mb-6">
+        <AddDemandDialog />
+      </div>
+
       <DataTable data={demands} />
 
       <div className="flex items-center justify-end">
