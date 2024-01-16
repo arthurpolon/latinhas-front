@@ -15,19 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-export type TDemand = {
-  id: string;
-
-  totalPlan: number;
-  status: "planning" | "in_progress" | "completed";
-
-  description?: string;
-};
-
-interface DataTableProps {
-  data: TDemand[];
-}
+import { TDemand } from "@/types/Demand";
 
 const columns: ColumnDef<TDemand>[] = [
   {
@@ -37,6 +25,7 @@ const columns: ColumnDef<TDemand>[] = [
   {
     accessorKey: "description",
     header: "Descrição",
+    cell: ({ row }) => row.original.description || "-",
   },
   {
     accessorKey: "totalPlan",
@@ -44,7 +33,11 @@ const columns: ColumnDef<TDemand>[] = [
   },
 ];
 
-export function DataTable({ data }: DataTableProps) {
+interface IProps {
+  data: TDemand[];
+}
+
+export function DataTable({ data }: IProps) {
   const table = useReactTable({
     data,
     columns,
