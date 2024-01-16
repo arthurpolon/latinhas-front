@@ -1,5 +1,6 @@
 "use client";
 
+import { AddDemandDialog } from "@/components/add-demand-dialog";
 import { DataTable } from "@/components/demands-table";
 import { Button } from "@/components/ui/button";
 import { useGetDemands } from "@/query/use-get-demands";
@@ -22,6 +23,7 @@ export default function Home() {
 
   return (
     <main className="container">
+      <AddDemandDialog />
       <DataTable data={demands} />
 
       <div className="flex items-center justify-end">
