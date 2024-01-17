@@ -13,7 +13,7 @@ export default function Home() {
   const meta = query.data?.meta;
 
   const range = () => {
-    if (!meta) return null;
+    if (!meta || demands.length === 0) return null;
 
     const startItem = (meta.page - 1) * meta.take + 1;
     const endItem = Math.min(meta.page * meta.take, meta.itemCount);

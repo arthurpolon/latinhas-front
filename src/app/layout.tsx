@@ -4,6 +4,10 @@ import "./globals.css";
 import QueryProvider from "@/providers/query";
 import { Header } from "@/components/header";
 
+import { setDefaultOptions } from "date-fns/setDefaultOptions";
+import { ptBR } from "date-fns/locale";
+setDefaultOptions({ locale: ptBR });
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {

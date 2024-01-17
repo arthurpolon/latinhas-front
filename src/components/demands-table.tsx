@@ -18,6 +18,7 @@ import {
 import { TDemand } from "@/types/Demand";
 import { RemoveDemandDialog } from "./remove-demand-dialog";
 import { EditDemandDialog } from "./edit-demand-dialog";
+import { formatDate } from "@/lib/utils";
 
 const columns: ColumnDef<TDemand>[] = [
   {
@@ -34,25 +35,34 @@ const columns: ColumnDef<TDemand>[] = [
     header: "Total Plan (tons)",
   },
   {
+    accessorKey: "date",
+    header: "Data",
+    cell: ({ row }) => (
+      <div className="whitespace-nowrap">
+        {formatDate(row.original.date, "PPP")}
+      </div>
+    ),
+  },
+  {
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
       switch (row.original.status) {
         case "planning":
           return (
-            <div className="bg-red-300 w-fit py-1 px-2 rounded-lg">
+            <div className="bg-red-300 whitespace-nowrap w-fit py-1 px-2 rounded-lg">
               Planejamento
             </div>
           );
         case "in_progress":
           return (
-            <div className="bg-blue-300 w-fit py-1 px-2 rounded-lg">
+            <div className="bg-blue-300 whitespace-nowrap w-fit py-1 px-2 rounded-lg">
               Em Andamento
             </div>
           );
         case "completed":
           return (
-            <div className="bg-green-300 w-fit py-1 px-2 rounded-lg">
+            <div className="bg-green-300 whitespace-nowrap w-fit py-1 px-2 rounded-lg">
               Concluído
             </div>
           );
@@ -120,7 +130,7 @@ export function DemandsTable({ data }: IProps) {
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
+                Sem resultados.
               </TableCell>
             </TableRow>
           )}

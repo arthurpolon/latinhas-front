@@ -4,8 +4,7 @@ import { FormControl } from "./ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Calendar } from "./ui/calendar";
 import { SelectSingleEventHandler } from "react-day-picker";
-import { format } from "date-fns";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 
 interface IProps {
   value: Date;
@@ -25,7 +24,7 @@ export function DatePicker(props: IProps) {
             )}
           >
             {props.value ? (
-              format(props.value, "PPP")
+              formatDate(props.value, "PPP")
             ) : (
               <span>Selecione uma data</span>
             )}
